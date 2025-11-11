@@ -1,0 +1,12 @@
+# Ignore the Google Cloud secret key
+gcloud_key.json
+
+# Ignore the database file
+db.sqlite3
+
+# Ignore environment variables
+.env
+
+# Ignore Python cache
+__pycache__/
+*.pyc

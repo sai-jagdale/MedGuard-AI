@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>{% block title %}MedGuard AI{% endblock %}</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <link rel="icon" href="{% static 'medicinebot/images/logo.png' %}" type="image/png"/>
+
+    <script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#3c83f6",
+                "background-light": "#f5f7f8",
+                "background-dark": "#101722",
+                "content-light": "#ffffff",
+                "content-dark": "#18212f",
+                "text-light": "#111827",
+                "text-dark": "#f3f4f6",
+                "subtle-light": "#6b7280",
+                "subtle-dark": "#9ca3af",
+                "border-light": "#e5e7eb",
+                "border-dark": "#374151"
+              },
+              fontFamily: { "display": ["Inter", "sans-serif"] },
+            },
+          },
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .logo-text {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #0a2351;
+        }
+        .logo-img {
+            height: 60px;
+            width: auto;
+        }
+    </style>
+</head>
+
+<body class="font-display bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+
+    <!-- Header (now blends with background, no separate bar) -->
+    <header class="flex w-full items-center justify-between px-8 pt-6">
+        <a href="{% url 'home' %}" class="flex items-center gap-3">
+            <img src="{% static 'medicinebot/images/logo.png' %}" alt="MedGuard AI Logo" class="logo-img">
+            <h2 class="logo-text">MedGuardAI</h2>
+        </a>
+
+        <div class="flex items-center gap-6">
+            <a href="{% url 'home' %}" class="text-sm font-medium text-subtle-light dark:text-subtle-dark hover:text-primary transition">Home</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'account' %}" class="text-sm font-medium text-subtle-light dark:text-subtle-dark hover:text-primary transition">History</a>
+                <span class="text-sm text-subtle-light dark:text-subtle-dark">Welcome, {{ user.username }}!</span>
+                <a href="{% url 'logout' %}" 
+                   class="flex items-center justify-center rounded-lg h-9 px-4 bg-red-600 text-white text-sm font-bold hover:bg-red-700 transition">
+                    Logout
+                </a>
+            {% else %}
+                <a href="{% url 'login' %}" 
+                   class="flex items-center justify-center rounded-lg h-9 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition">
+                    Login
+                </a>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex w-full flex-1 justify-center py-8 sm:py-12">
+        <div class="layout-content-container flex w-full max-w-4xl flex-1 flex-col items-center gap-8 px-4 sm:px-6 lg:px-8">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full bg-transparent">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 text-center">
+            <p class="text-sm text-subtle-light dark:text-subtle-dark">
+                © {% now "Y" %} MedGuard AI. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+</div>
+</body>
+</html>

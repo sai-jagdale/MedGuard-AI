@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Sign In - MedGuard AI</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <link rel="icon" href="{% static 'medicinebot/images/logo.png' %}" type="image/png">
+
+    <script id="tailwind-config">
+          tailwind.config = {
+            darkMode: "class",
+            theme: {
+              extend: {
+                colors: {
+                  "primary": "#3c83f6",
+                  "background-light": "#f5f7f8",
+                  "background-dark": "#101722",
+                  "content-light": "#ffffff", // White (cards)
+                  "content-dark": "#18212f",
+                  "text-light": "#111827", // Dark gray (main text)
+                  "text-dark": "#f3f4f6",
+                  "subtle-light": "#6b7280", // Lighter gray (subtext)
+                  "subtle-dark": "#9ca3af",
+                  "border-light": "#e5e7eb", // Light border
+                  "border-dark": "#374151"
+                },
+                fontFamily: {
+                  "display": ["Inter", "sans-serif"]
+                },
+                borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+              },
+            },
+          }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            cursor: pointer; /* Make the eye icon clickable */
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="flex flex-1 justify-center items-center py-10 px-4 sm:px-6 lg:px-8">
+<div class="w-full max-w-md space-y-8">
+<div class="bg-white dark:bg-content-dark p-8 shadow-lg rounded-xl border border-border-light dark:border-border-dark">
+<div class="layout-content-container flex flex-col flex-1">
+<div class="flex items-center justify-center mb-6">
+    {# --- LOGO --- #}
+    <img src="{% static 'medicinebot/images/logo.png' %}" alt="MedGuard AI Logo" class="h-10 w-auto">
+    <span class="text-2xl font-bold tracking-tight text-[#0078d4] dark:text-[#60a5fa]">MedGuard AI</span>
+</div>
+
+<h1 class="text-text-light dark:text-text-dark tracking-tight text-3xl font-bold leading-tight text-center pb-2">Sign in to your account</h1>
+<p class="text-subtle-light dark:text-subtle-dark text-sm font-normal leading-normal pb-6 text-center">Don't have an account? <a class="font-medium text-primary hover:underline" href="{% url 'signup' %}">Sign up</a></p>
+
+<!-- Error Message Box -->
+{% if form.errors or messages %}
+<div class="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4 mb-6 dark:bg-red-900/20 dark:border-red-500/30">
+    <span class="material-symbols-outlined text-red-600 dark:text-red-400" style="font-size: 20px;">error</span>
+    <p class="text-sm font-medium text-red-800 dark:text-red-300">
+        {% if form.non_field_errors %}
+            {{ form.non_field_errors.as_text|striptags }}
+        {% else %}
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        {% endif %}
+    </p>
+</div>
+{% endif %}
+<!-- End Error Message Box -->
+
+<form method="POST" class="flex flex-col gap-4">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
+
+    <label class="flex flex-col min-w-40 flex-1">
+        <p class="text-text-light dark:text-text-dark text-base font-medium leading-normal pb-2">Username</p>
+        <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-text-light focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-border-light bg-content-light focus:border-primary h-14 placeholder:text-subtle-light p-[15px] text-base font-normal leading-normal dark:bg-content-dark dark:border-border-dark dark:text-text-dark dark:placeholder:text-subtle-dark" 
+               placeholder="Enter your username" 
+               type="text"
+               name="{{ form.username.html_name }}"
+               id="{{ form.username.id_for_label }}"
+               autocomplete="username"
+               required
+               value="{{ form.username.value|default:'' }}">
+    </label>
+
+    <label class="flex flex-col min-w-40 flex-1">
+        <p class="text-text-light dark:text-text-dark text-base font-medium leading-normal pb-2">Password</p>
+        <div class="flex w-full flex-1 items-stretch rounded-lg">
+            <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-l-lg text-text-light focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-border-light bg-content-light focus:border-primary h-14 placeholder:text-subtle-light p-[15px] border-r-0 pr-2 text-base font-normal leading-normal dark:bg-content-dark dark:border-border-dark dark:text-text-dark dark:placeholder:text-subtle-dark" 
+                   placeholder="Enter your password" 
+                   type="password"
+                   name="{{ form.password.html_name }}"
+                   id="id_password"
+                   autocomplete="current-password"
+                   required>
+            <div classs="flex border border-border-light dark:border-border-dark bg-content-light dark:bg-content-dark items-center justify-center pr-[15px] rounded-r-lg border-l-0"
+                 onclick="togglePassword()">
+                <span id="toggle-icon" class="material-symbols-outlined text-subtle-light dark:text-subtle-dark" style="font-size: 24px; padding-top:14px; padding-right:10px;">visibility</span>
+            </div>
+        </div>
+    </label>
+
+    <div class="flex pt-6">
+        <button type="submit" class="flex min-w-[84px] max-w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 flex-1 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50 dark:focus:ring-offset-zinc-900">
+            <span class="truncate">Sign In</span>
+        </button>
+    </div>
+</form>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+    function togglePassword() {
+        const passwordInput = document.getElementById('id_password');
+        const toggleIcon = document.getElementById('toggle-icon');
+        
+        // Toggle the type attribute
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleIcon.textContent = 'visibility_off';
+        } else {
+            passwordInput.type = 'password';
+            toggleIcon.textContent = 'visibility';
+        }
+    }
+</script>
+
+</body>
+</html>
+

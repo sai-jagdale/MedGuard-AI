@@ -1,0 +1,15 @@
+# requirements.txt
+
+django
+django-cors-headers
+pandas
+ollama
+markdown
+pytesseract
+Pillow
+thefuzz
+python-Levenshtein
+opencv-python-headless
+numpy
+google-cloud-vision
+dotenv

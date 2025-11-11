@@ -1,0 +1,130 @@
+{% extends 'medicinebot/base.html' %}
+{% load static %}
+
+{% block title %}Home - MedGuard AI{% endblock %}
+
+{% block content %}
+{% if analysis_summary %}
+    <!-- Results Section -->
+    <div class="flex flex-col gap-2 text-center w-full">
+        <h1 class="text-text-light dark:text-text-dark text-2xl md:text-2xl font-black leading-tight">
+            Analysis Result
+        </h1>
+    </div>
+    <div class="w-full max-w-3xl space-y-8">
+        <div class="bg-content-light dark:bg-content-dark rounded-xl shadow-lg p-6 border border-border-light dark:border-border-dark">
+            <div class="flex flex-col md:flex-row items-start gap-6">
+                {% if image_data_url %}
+                <div class="w-full md:w-1/3">
+                    <p class="text-sm text-subtle-light dark:text-subtle-dark mb-2">Image Analyzed:</p>
+                    <div class="w-full aspect-square rounded-lg bg-cover bg-center border border-border-light dark:border-border-dark"
+                         style="background-image: url('{{ image_data_url }}');"></div>
+                </div>
+                {% endif %}
+                <div class="w-full {% if image_data_url %}md:w-2/3{% endif %}">
+                    <div class="text-text-light dark:text-text-dark font-normal leading-relaxed">
+                        {{ analysis_summary|safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-center py-3">
+            <a href="{% url 'home' %}" class="rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-content-dark dark:hover:bg-border-dark text-text-light dark:text-text-dark px-6 py-3 font-bold border">
+                Start New Search
+            </a>
+        </div>
+    </div>
+
+{% else %}
+    <!-- Search Section -->
+    <div class="flex flex-col gap-3 text-center">
+        <h1 class="text-3xl font-black text-text-light dark:text-text-dark sm:text-3xl">
+            Your Trusted Source for Medicine Information
+        </h1>
+        <p class="text-base text-subtle-light dark:text-subtle-dark">
+            Instantly identify pills, check interactions, and get reliable drug information.
+        </p>
+    </div>
+
+    <div class="w-full max-w-2xl rounded-xl bg-content-light dark:bg-content-dark p-6 shadow-lg border border-border-light dark:border-border-dark sm:p-8">
+        <form method="POST" enctype="multipart/form-data" class="flex flex-col gap-6">
+            {% csrf_token %}
+
+            <!-- Search by name -->
+            <label class="flex flex-col">
+                <p class="pb-2 text-base font-medium leading-normal text-text-light dark:text-text-dark">Search for medicine</p>
+                {{ form.search_query }}
+            </label>
+
+            <!-- Divider -->
+            <div class="relative flex items-center">
+                <div class="flex-grow border-t border-border-light dark:border-border-dark"></div>
+                <span class="flex-shrink mx-4 text-subtle-light dark:text-subtle-dark text-sm">OR</span>
+                <div class="flex-grow border-t border-border-light dark:border-border-dark"></div>
+            </div>
+
+            <!-- Upload Sections -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- Packaging Upload -->
+                <div>
+                    <label for="packaging_upload"
+                           class="flex flex-col items-center justify-center gap-6 rounded-lg border-2 border-dashed border-border-light px-6 py-10 cursor-pointer hover:border-primary dark:border-border-dark dark:hover:border-primary"
+                           style="min-height: 200px;">
+                        <div id="dropzone-packaging" class="text-center">
+                            <span class="material-symbols-outlined text-3xl text-subtle-light dark:text-subtle-dark">photo_camera</span>
+                            <p class="font-bold text-text-light dark:text-text-dark">Upload Packaging Image</p>
+                            <p class="text-sm text-subtle-light dark:text-subtle-dark">Drag and drop or click to upload</p>
+                        </div>
+                    </label>
+                    {{ form.packaging_image }} <!-- hidden input rendered here -->
+                </div>
+
+                <!-- Barcode Upload -->
+                <div>
+                    <label for="barcode_upload"
+                           class="flex flex-col items-center justify-center gap-6 rounded-lg border-2 border-dashed border-border-light px-6 py-10 cursor-pointer hover:border-primary dark:border-border-dark dark:hover:border-primary"
+                           style="min-height: 200px;">
+                        <div id="dropzone-barcode" class="text-center">
+                            <span class="material-symbols-outlined text-3xl text-subtle-light dark:text-subtle-dark">qr_code_2</span>
+                            <p class="font-bold text-text-light dark:text-text-dark">Upload Barcode Image</p>
+                            <p class="text-sm text-subtle-light dark:text-subtle-dark">Drag and drop or click to upload</p>
+                        </div>
+                    </label>
+                    {{ form.barcode_image }} <!-- hidden input rendered here -->
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="rounded-lg bg-primary h-12 px-4 text-base font-bold text-white hover:bg-primary/90">
+                Search
+            </button>
+        </form>
+    </div>
+
+    <!-- JS for Previews -->
+    <script>
+        function setupPreview(inputId, zoneId) {
+            const input = document.getElementById(inputId);
+            const zone = document.getElementById(zoneId);
+            if (!input || !zone) return;
+
+            input.addEventListener('change', e => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = ev => {
+                        zone.innerHTML = `
+                            <img src="${ev.target.result}" style="max-width:200px;max-height:150px;border-radius:8px;">
+                            <p class='text-sm font-medium text-primary mt-2'>Click to change file</p>`;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        setupPreview("packaging_upload", "dropzone-packaging");
+        setupPreview("barcode_upload", "dropzone-barcode");
+    </script>
+{% endif %}
+{% endblock %}

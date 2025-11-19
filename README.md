@@ -46,3 +46,12 @@ The system is built on specialized, cooperating AI agents orchestrated by the **
 | **Data Processing** | Pandas, NumPy, Regex | Data extraction, matching, and manipulation  |
 | **Database** | SQLite3 / PostgreSQL | Data storage and history tracking  |
 | **Frontend** | HTML, CSS, JavaScript, Bootstrap | User Interface design |
+
+---
+
+## Project File Structure
+
+## 🌳 Project Structure
+
+This project follows a standard Django structure, organized around the main project folder (`medguard_project`) and the primary application (`medicinebot`). The Agentic AI workflow logic is contained within the `medicinebot/agents/` directory.
+MEDGUARD_AI/ ├── medguard_project/ # Main Django Project Configuration │ ├── init.py │ ├── asgi.py │ ├── settings.py │ ├── urls.py │ └── wsgi.py ├── medicinebot/ # Primary Django Application (The core logic) │ ├── agents/ # Agentic AI Workflow Implementation │ │ ├── barcode_agent.py # Decodes and verifies barcodes/QR codes │ │ ├── extraction_agent.py # Regex for MFG, EXP, and Price data │ │ ├── ocr_agent.py # Google Cloud Vision API integration │ │ ├── search_agent.py # TheFuzz fuzzy matching logic │ │ └── summary_agent.py # Ollama LLM summarization logic │ ├── management/ │ │ └── commands/ │ ├── migrations/ │ ├── static/ │ │ └── medicinebot/ │ │ └── images/ │ │ └── logo.png │ ├── templates/ │ │ └── medicinebot/ │ │ ├── account-history.html │ │ ├── base.html │ │ ├── home.html # Tri-input interface │ │ ├── login.html │ │ └── signup.html │ ├── admin.py │ ├── apps.py │ ├── forms.py │ ├── models.py # Database schemas (e.g., Search History, User) │ ├── tests.py │ ├── urls.py │ └── views.py # Intake Agent (The Orchestrator) ├── ScreenShots/ # Project output and testing screenshots ├── .gitattributes ├── .gitignore ├── gcloud_key.json # Google Cloud Vision API Credentials ├── MajorProjectDataset.csv # Local knowledge base for verification ├── db.sqlite3 # Local Development Database ├── manage.py # Django Command Utility ├── requirements.txt # Python Dependencies └── venv/ # Python Virtual Environment
